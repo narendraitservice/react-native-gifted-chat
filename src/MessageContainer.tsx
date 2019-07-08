@@ -117,7 +117,7 @@ export default class MessageContainer extends React.PureComponent<
     showScrollBottom: false,
   }
 
-  flatListRef?: RefObject<FlatList<IMessage>> = undefined
+//   flatListRef?: RefObject<FlatList<IMessage>> = undefined
 
   componentDidMount() {
     if (this.props.messages && this.props.messages.length === 0) {
@@ -223,6 +223,13 @@ export default class MessageContainer extends React.PureComponent<
       this.setState({ showScrollBottom: false })
     }
   }
+  
+  scrollToSpecificIndex = (item: any) => {
+    let getReplyMessage = this.props.messages.filter(function(message: any) {return message._id === item.replayInfo[0].messages_id;});
+    if (getReplyMessage.length > 0) {
+      this.flatListRef.scrollToItem({item: getReplyMessage[0], animated: true})
+    }
+  }
 
   renderRow = ({ item, index }: ListRenderItemInfo<IMessage>) => {
     if (!item._id && item._id !== 0) {
@@ -310,7 +317,7 @@ export default class MessageContainer extends React.PureComponent<
           ? this.renderScrollToBottomWrapper()
           : null}
         <FlatList
-          ref={this.flatListRef}
+          ref={(ref) => this.flatListRef = ref}
           extraData={this.props.extraData}
           keyExtractor={this.keyExtractor}
           enableEmptySections
